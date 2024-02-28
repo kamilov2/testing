@@ -59,7 +59,7 @@ class RegisterAPIView(APIView):
 
                 
                 return Response({'success': 'User with this username already exists.',
-                                 'token_key':token.key
+                                 'user_token':token.key
                                  },
                                 status=status.HTTP_200_OK)
             
