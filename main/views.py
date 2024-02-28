@@ -153,12 +153,15 @@ class ResultAPIView(APIView):
         try:
             profile = user.profile
             test_results = main_models.UserTestResult.objects.filter(user=profile)
+            question_count = main_models.Question.objects.count()
+
             data = []
             for result in test_results:
                 data.append({
                     'test_title': result.test.title,
                     'score': result.score,
-                    'date_taken': result.date_taken
+                    'date_taken': result.date_taken,
+                    "question_count":question_count
                 })
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
