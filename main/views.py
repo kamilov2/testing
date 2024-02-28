@@ -152,7 +152,9 @@ class AnswerAPIView(APIView):
             )
             return Response({'error': 'An error occurred. Error ID: {}'.format(error_log.error_number)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+import telebot
 
+bot = telebot.TeleBot('6367382297:AAHIj-h6yef4koM07DkoPgg-408WfUy0s5A')
 
 class ResultAPIView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -164,7 +166,7 @@ class ResultAPIView(APIView):
             profile = user.profile
             test_results = main_models.UserTestResult.objects.filter(user=profile)
             question_count = main_models.Question.objects.count()
-
+    
             data = []
             for result in test_results:
                 data.append({
@@ -173,6 +175,16 @@ class ResultAPIView(APIView):
                     'date_taken': result.date_taken,
                     "question_count":question_count
                 })
+            bot.send_message('-1002137089103', 
+                f'''
+
+                Lid:
+                Ismi: {profile.name}
+                Telefoni: {profile.phone_number}
+                Test haqida malumot: {data}
+
+                ''')
+
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             error_code = str(uuid.uuid4())[:15]
