@@ -41,35 +41,35 @@ class RegisterAPIView(APIView):
         try:
             name = request.data.get('name')
             phone_number = request.data.get('phone_number')
-            if name is not None and phone_number is not None:
-                if main_models.User.objects.filter(username=f'{name}{phone_number}').exists():
-                    user = main_models.User.objects.get(username=f'{name}{phone_number}')
-                    if hasattr(user, 'profile'):
-                        profile = user.profile
-                        result = main_models.UserTestResult.objects.get(user=profile)
-                        result.score = 0
-                        result.save()
-                        return Response({'error': 'User with this username already exists.'},
-                                    status=status.HTTP_400_BAD_REQUEST)
-                    
-                user = main_models.User.objects.create(username=f'{name}{phone_number}')
-                profile = main_models.Profile.objects.create(user=user, name=name, phone_number=phone_number)
-                main_models.UserTestResult.objects.create(user=profile, test=main_models.Test.objects.first(), score=0)
-                user.set_password(phone_number)
-                user.save()
-                token, _ = Token.objects.get_or_create(user=user)
-                return Response({'success': 'User created successfully.',
-                                 'user_token': token.key
-                                 }, status=status.HTTP_201_CREATED)
-            else:
+            
+            if name is None or phone_number is None:
                 error_log = main_models.ErrorLog.objects.create(
                     error_number=error_code,
                     error_message='Username or password is missing.',
                     user_agent=request.META.get('HTTP_USER_AGENT'),
                     ip_address=request.META.get('REMOTE_ADDR'),
                 )
-                return Response({'error': 'An error occurred. Error ID: {}'.format(error_log.error_number)},
+                return Response({'error': 'Username or password is missing. Error ID: {}'.format(error_code)},
                                 status=status.HTTP_400_BAD_REQUEST)
+            
+            username = f'{name}{phone_number}'
+            if main_models.User.objects.filter(username=username).exists():
+                return Response({'error': 'User with this username already exists.'},
+                                status=status.HTTP_400_BAD_REQUEST)
+            
+            user = main_models.User.objects.create(username=username)
+            user.set_password(phone_number)
+            user.save()
+            
+            profile = main_models.Profile.objects.create(user=user, name=name, phone_number=phone_number)
+            test = main_models.Test.objects.first()
+            result = main_models.UserTestResult.objects.create(user=profile, test=test, score=0)
+            
+            token, _ = Token.objects.get_or_create(user=user)
+            
+            return Response({'success': 'User created successfully.',
+                             'user_token': token.key
+                             }, status=status.HTTP_201_CREATED)
         except Exception as e:
             error_log = main_models.ErrorLog.objects.create(
                 error_number=error_code,
@@ -77,7 +77,7 @@ class RegisterAPIView(APIView):
                 user_agent=request.META.get('HTTP_USER_AGENT'),
                 ip_address=request.META.get('REMOTE_ADDR'),
             )
-            return Response({'error': 'An error occurred. Error ID: {}'.format(error_log.error_number)},
+            return Response({'error': 'An error occurred. Error ID: {}'.format(error_code)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class QuestionAPIView(APIView):
