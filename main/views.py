@@ -54,6 +54,10 @@ class RegisterAPIView(APIView):
             
             username = f'{name}{phone_number}'
             if main_models.User.objects.filter(username=username).exists():
+                profile = main_models.Profile.objects.get(user=main_models.User.objects.get(username=username))
+                result = main_models.UserTestResult.objects.get(user=profile)
+                result.score = 0
+                result.save()
                 token, _ = Token.objects.get_or_create(user=main_models.User.objects.get(username=username))
 
 
