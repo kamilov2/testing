@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример веб-DRM</title>
+</head>
+<body>
+
+<!-- Элемент для воспроизведения защищенного контента -->
+<video controls src="protected-content.mp4"></video>
+
+<script>
+  // Получение элемента video
+  const videoElement = document.querySelector('video');
+
+  // Ключ для декодирования контента (заглушка, реальные ключи будут обработаны вашей DRM-системой)
+  const sampleKey = '0123456789ABCDEF0123456789ABCDEF';
+
+  // Обработчик событий для запроса ключа
+  videoElement.addEventListener('encrypted', (event) => {
+    // Создание запроса на ключ
+    const keyRequest = event.target.mediaKeys.createSession();
+
+    // Обработка событий относящихся к запросу ключа
+    keyRequest.addEventListener('message', (event) => {
+      // Здесь должна быть реализация вашей DRM-системы для обработки запроса и предоставления ключа
+      // В данном случае мы используем заглушку
+      const response = { key: sampleKey, license: 'sampleLicense' };
+
+      // Отправка ответа с ключом
+      keyRequest.update(response);
+    });
+  });
+
+  // Установка mediaKeys на элемент video (заглушка, реальная реализация зависит от вашей DRM-системы)
+  navigator.requestMediaKeySystemAccess('com.example.drm')
+    .then((keySystemAccess) => {
+      return keySystemAccess.createMediaKeys();
+    })
+    .then((mediaKeys) => {
+      return videoElement.setMediaKeys(mediaKeys);
+    })
+    .catch((error) => {
+      console.error('Ошибка при установке mediaKeys:', error);
+    });
+</script>
+
+</body>
+</html>

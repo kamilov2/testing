@@ -1,0 +1,6 @@
+services:
+  - name: web
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn testing.wsgi:application --bind 0.0.0.0:$PORT
+    env: python3.9
+    root: ./
