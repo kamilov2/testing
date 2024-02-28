@@ -142,6 +142,8 @@ class AnswerAPIView(APIView):
             )
             return Response({'error': 'An error occurred. Error ID: {}'.format(error_log.error_number)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+
+
 # class PhotoAPIView(views.APIView):
 #     permission_classes = [AllowAny]
 #     pagination_class = CustomPagination
