@@ -144,7 +144,7 @@ class AnswerAPIView(APIView):
         
 
 
-class UserTestResultsAPIView(APIView):
+class ResultAPIView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
