@@ -54,8 +54,9 @@ class RegisterAPIView(APIView):
             
             username = f'{name}{phone_number}'
             if main_models.User.objects.filter(username=username).exists():
+                
                 return Response({'error': 'User with this username already exists.'},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_200_OK)
             
             user = main_models.User.objects.create(username=username)
             user.set_password(phone_number)
