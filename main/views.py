@@ -143,13 +143,12 @@ class AnswerAPIView(APIView):
             return Response({'error': 'An error occurred. Error ID: {}'.format(error_log.error_number)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
-class ResultAPIView(APIView):
+
+class UserTestResultsAPIView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        error_code = str(uuid.uuid4())[:15]
-
         user = request.user
         try:
             profile = user.profile
@@ -159,20 +158,29 @@ class ResultAPIView(APIView):
                 data.append({
                     'test_title': result.test.title,
                     'score': result.score,
-                    'date_taken': result.date_taken,
-                    'total_questions': result.total_questions
+                    'date_taken': result.date_taken
                 })
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
+            error_code = str(uuid.uuid4())[:15]
             error_log = main_models.ErrorLog.objects.create(
                 error_number=error_code,
                 error_message=str(e),
                 user_agent=request.META.get('HTTP_USER_AGENT'),
                 ip_address=request.META.get('REMOTE_ADDR'),
             )
-            return Response({'error': 'An error occurred. Error ID: {}'.format(error_log.error_number)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-        
+            return Response({'error': 'Profile not found. Error ID: {}'.format(error_log.error_number)},
+                            status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            error_code = str(uuid.uuid4())[:15]
+            error_log = main_models.ErrorLog.objects.create(
+                error_number=error_code,
+                error_message=str(e),
+                user_agent=request.META.get('HTTP_USER_AGENT'),
+                ip_address=request.META.get('REMOTE_ADDR'),
+            )
+            return Response({'error': 'An error occurred. Error ID: {}'.format(error_log.error_number)},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 # class PhotoAPIView(views.APIView):
 #     permission_classes = [AllowAny]
 #     pagination_class = CustomPagination
