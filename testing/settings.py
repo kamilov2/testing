@@ -115,7 +115,8 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  
     "https://chikim.vercel.app",
-    "https://*.lhr.life"
+    "https://*.lhr.life",
+    "https://testing-topaz-xi.vercel.app/",
 ]
 
 

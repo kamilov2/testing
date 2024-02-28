@@ -174,6 +174,7 @@ class ResultAPIView(APIView):
             )
             return Response({'error': 'Profile not found. Error ID: {}'.format(error_log.error_number)},
                             status=status.HTTP_404_NOT_FOUND)
+        
 
 # class PhotoAPIView(views.APIView):
 #     permission_classes = [AllowAny]
