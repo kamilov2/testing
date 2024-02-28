@@ -103,7 +103,7 @@ class QuestionAPIView(APIView):
             if not first_test:
                 return Response({'error': 'No tests available'}, status=status.HTTP_404_NOT_FOUND)
 
-            queryset = main_models.Question.objects.filter(test=first_test).prefetch_related('answers')
+            queryset = main_models.Question.objects.filter(test=first_test).prefetch_related('answers').order_by('?')
             if not queryset.exists():
                 return Response({'error': 'No questions available for the first test'}, status=status.HTTP_404_NOT_FOUND)
             
