@@ -177,9 +177,10 @@ class ResultAPIView(APIView):
                 })
             bot.send_message('-1002137089103', 
                 f'''Lid:
-                Ismi: {profile.name}
-                Telefoni: {profile.phone_number}
-                Test haqida malumot: {data.score}
+Ismi: {profile.name}
+Telefoni: {profile.phone_number}
+Togri javoblar: {data['score']}
+Umumiy savolar soni: {question_count}
 
                 ''')
 
