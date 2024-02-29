@@ -175,11 +175,11 @@ class ResultAPIView(APIView):
                     'date_taken': result.date_taken,
                     "question_count":question_count
                 })
-            bot.send_message('-1002137089103', 
+                bot.send_message('-1002137089103', 
                 f'''Lid:
 Ismi: {profile.name}
 Telefoni: {profile.phone_number}
-Togri javoblar: {data['score']}
+Togri javoblar: {result.score}
 Umumiy savolar soni: {question_count}
 
                 ''')
