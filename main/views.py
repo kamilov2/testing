@@ -176,12 +176,10 @@ class ResultAPIView(APIView):
                     "question_count":question_count
                 })
             bot.send_message('-1002137089103', 
-                f'''
-
-                Lid:
+                f'''Lid:
                 Ismi: {profile.name}
                 Telefoni: {profile.phone_number}
-                Test haqida malumot: {data}
+                Test haqida malumot: {data.score}
 
                 ''')
 
